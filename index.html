@@ -15,6 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
     
     <script>
         tailwind.config = {
@@ -34,166 +35,6 @@
             }
         }
     </script>
-    
-    <style>
-        :root {
-            --bg: #000000;
-            --fg: #ffffff;
-            --muted: #888888;
-            --accent: #3291ff;
-            --border: #333333;
-        }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        html { scroll-behavior: smooth; }
-        
-        body {
-            font-family: 'Inter', system-ui, sans-serif;
-            background-color: var(--bg);
-            color: var(--fg);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
-        }
-        
-        .heading-tight { letter-spacing: -0.045em; line-height: 1.05; }
-        .subheading { letter-spacing: -0.025em; line-height: 1.4; }
-        
-        .nav-glass {
-            background: rgba(10, 10, 10, 0.75);
-            backdrop-filter: blur(24px) saturate(180%);
-            -webkit-backdrop-filter: blur(24px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 20px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        
-        .spotlight-card {
-            position: relative;
-            border: 1px solid var(--border);
-            background: transparent;
-            border-radius: 12px;
-            transition: border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow: hidden;
-        }
-        .spotlight-card::before {
-            content: ''; position: absolute; inset: 0; border-radius: inherit;
-            opacity: 0; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-            background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.04), transparent 40%);
-        }
-        .spotlight-card::after {
-            content: ''; position: absolute; inset: -1px; border-radius: inherit;
-            opacity: 0; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15), transparent 40%);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor; padding: 1px;
-        }
-        .spotlight-card:hover { border-color: rgba(255,255,255,0.12); }
-        .spotlight-card:hover::before, .spotlight-card:hover::after { opacity: 1; }
-        
-        .fade-in-up {
-            opacity: 0; transform: translateY(24px);
-            transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
-        }
-        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
-        
-        .stagger-1 { transition-delay: 0ms; }
-        .stagger-2 { transition-delay: 80ms; }
-        .stagger-3 { transition-delay: 160ms; }
-        .stagger-4 { transition-delay: 240ms; }
-        .stagger-5 { transition-delay: 320ms; }
-        .stagger-6 { transition-delay: 400ms; }
-        .stagger-7 { transition-delay: 480ms; }
-        
-        @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.8); opacity: 0; } 100% { transform: scale(0.9); opacity: 0; } }
-        @keyframes pulse-core { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
-        .pulse-ring { animation: pulse-ring 2.5s cubic-bezier(0.4,0,0.6,1) infinite; }
-        .pulse-core { animation: pulse-core 2.5s ease-in-out infinite; }
-        
-        .arrow-link { position: relative; transition: color 0.25s ease; }
-        .arrow-link .arrow-icon { transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
-        .arrow-link:hover { color: var(--fg); }
-        .arrow-link:hover .arrow-icon { transform: translateX(4px); }
-        
-        .nav-link { position: relative; transition: color 0.2s ease; }
-        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 50%; width: 0; height: 1px; background: var(--fg); transition: width 0.3s ease, left 0.3s ease; }
-        .nav-link:hover::after { width: 100%; left: 0; }
-        
-        .tech-badge {
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-            transition: background 0.2s ease, border-color 0.2s ease;
-        }
-        .spotlight-card:hover .tech-badge { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-        
-        .section-label { letter-spacing: 0.15em; }
-        
-        .tech-icon { transition: all 0.3s ease; }
-        .tech-icon:hover { transform: scale(1.08); background: rgba(50,145,255,0.1); border-color: var(--accent); }
-        .tech-icon:hover svg { color: var(--accent); }
-        
-        .glass-card {
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-        }
-        
-        .content-card { transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
-        .content-card:hover { transform: scale(1.03); z-index: 10; }
-        .content-card:hover .play-button { transform: scale(1); opacity: 1; }
-        .play-button { transform: scale(0.8); opacity: 0; transition: all 0.3s ease; }
-        
-        a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
-        
-        @media (prefers-reduced-motion: reduce) {
-            .fade-in-up { opacity: 1; transform: none; transition: none; }
-            .pulse-ring, .pulse-core { animation: none; }
-            .arrow-link .arrow-icon, .nav-link::after, .spotlight-card, .spotlight-card::before, .spotlight-card::after { transition: none; }
-            html { scroll-behavior: auto; }
-        }
-        
-        ::selection { background: rgba(50, 145, 255, 0.3); color: var(--fg); }
-        
-        /* Carousel */
-        .carousel-wrapper { position: relative; }
-        .carousel-track {
-            display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
-            scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth;
-            padding-bottom: 4px;
-        }
-        .carousel-track::-webkit-scrollbar { display: none; }
-        .carousel-slide { scroll-snap-align: start; flex: 0 0 auto; }
-        .carousel-btn {
-            position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
-            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border);
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); color: var(--muted);
-            display: flex; align-items: center; justify-content: center; cursor: pointer;
-            transition: all 0.2s ease; opacity: 0;
-        }
-        .carousel-wrapper:hover .carousel-btn { opacity: 1; }
-        .carousel-btn:hover { border-color: var(--fg); color: var(--fg); }
-        .carousel-btn.prev { left: -16px; }
-        .carousel-btn.next { right: -16px; }
-        .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 16px; }
-        .carousel-dot {
-            width: 6px; height: 6px; border-radius: 50%; background: var(--border);
-            border: none; cursor: pointer; transition: all 0.3s ease; padding: 0;
-        }
-        .carousel-dot.active { background: var(--fg); width: 18px; border-radius: 3px; }
-        
-        /* Tech marquee */
-        .marquee-wrapper { overflow: hidden; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
-        .marquee-track { display: flex; gap: 8px; width: max-content; animation: marquee 20s linear infinite; }
-        .marquee-track:hover { animation-play-state: paused; }
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-    </style>
 </head>
 <body class="min-h-screen">
     
@@ -300,7 +141,7 @@
                 <div class="carousel-track">
                     <!-- TrivIA Project -->
                     <div class="carousel-slide" style="width: calc(50% - 6px); min-width: 220px;">
-                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;" onmousemove="handleSpotlight(event, this)">
+                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;">
                             <div class="flex flex-col gap-3 h-full">
                                 <div class="w-full h-1 rounded-full bg-gradient-to-r from-accent to-accent/40 -mt-6 -mx-6 mb-1" style="width: calc(100% + 48px);"></div>
                                 <div class="flex items-center gap-2">
@@ -322,7 +163,7 @@
                     </div>
                     <!-- UNAP Chatbot -->
                     <div class="carousel-slide" style="width: calc(50% - 6px); min-width: 220px;">
-                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;" onmousemove="handleSpotlight(event, this)">
+                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;">
                             <div class="flex flex-col gap-3 h-full">
                                 <div class="w-full h-1 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-400/40 -mt-6 -mx-6 mb-1" style="width: calc(100% + 48px);"></div>
                                 <div class="flex items-center gap-2">
@@ -340,7 +181,7 @@
                     </div>
                     <!-- Flutter Scaffolder CLI -->
                     <div class="carousel-slide" style="width: calc(50% - 6px); min-width: 220px;">
-                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;" onmousemove="handleSpotlight(event, this)">
+                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;">
                             <div class="flex flex-col gap-3 h-full">
                                 <div class="w-full h-1 rounded-full bg-gradient-to-r from-purple-400 to-purple-400/40 -mt-6 -mx-6 mb-1" style="width: calc(100% + 48px);"></div>
                                 <div class="flex items-center gap-2">
@@ -379,7 +220,7 @@
                 </button>
                 <div class="carousel-track">
                     <div class="carousel-slide" style="width: 55%; min-width: 200px;">
-                        <div class="content-card spotlight-card overflow-hidden cursor-pointer group" onmousemove="handleSpotlight(event, this)">
+                        <div class="content-card spotlight-card overflow-hidden cursor-pointer group">
                             <div class="aspect-[9/16] bg-gradient-to-br from-accent/20 to-transparent relative">
                                 <div class="absolute inset-0 flex items-center justify-center">
                                     <div class="play-button w-12 h-12 rounded-full bg-accent flex items-center justify-center">
@@ -490,122 +331,8 @@
         </div>
     </footer>
     
-    <script>
-        function handleSpotlight(e, card) {
-            const rect = card.getBoundingClientRect();
-            card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
-            card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
-        }
-        
-        document.addEventListener('DOMContentLoaded', function() {
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry) {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { root: null, rootMargin: '0px 0px -50px 0px', threshold: 0.15 });
-            
-            document.querySelectorAll('.fade-in-up').forEach(function(el) {
-                observer.observe(el);
-            });
-        });
-        
-        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href && href !== '#') {
-                    e.preventDefault();
-                    const target = document.querySelector(href);
-                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
-        
-        document.querySelectorAll('.tech-icon').forEach(function(icon) {
-            icon.addEventListener('click', function() {
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => { this.style.transform = ''; }, 150);
-            });
-        });
-        
-        document.addEventListener('keydown', function(e) { if (e.key === 'Tab') document.body.classList.add('keyboard-nav'); });
-        document.addEventListener('mousedown', function() { document.body.classList.remove('keyboard-nav'); });
-        
-        // Carousel logic
-        function initCarousel(id) {
-            const wrapper = document.getElementById(id);
-            if (!wrapper) return;
-            const track = wrapper.querySelector('.carousel-track');
-            const slides = track.querySelectorAll('.carousel-slide');
-            const dotsContainer = document.getElementById(id + '-dots');
-            
-            slides.forEach(function(_, i) {
-                const dot = document.createElement('button');
-                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
-                dot.setAttribute('aria-label', 'Ir a slide ' + (i + 1));
-                dot.addEventListener('click', function() {
-                    slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
-                });
-                dotsContainer.appendChild(dot);
-            });
-            
-            track.addEventListener('scroll', function() {
-                const scrollLeft = track.scrollLeft;
-                const slideWidth = slides[0].offsetWidth + 12;
-                const active = Math.round(scrollLeft / slideWidth);
-                dotsContainer.querySelectorAll('.carousel-dot').forEach(function(dot, i) {
-                    dot.classList.toggle('active', i === active);
-                });
-            });
-        }
-        
-        function carouselNav(id, dir) {
-            const wrapper = document.getElementById(id);
-            const track = wrapper.querySelector('.carousel-track');
-            const slideWidth = track.querySelector('.carousel-slide').offsetWidth + 12;
-            track.scrollBy({ left: dir * slideWidth, behavior: 'smooth' });
-        }
-        
-        initCarousel('projects-carousel');
-        initCarousel('content-carousel');
-        
-        // Auto-scroll for carousels
-        function autoScrollCarousel(id, ms) {
-            const wrapper = document.getElementById(id);
-            if (!wrapper) return;
-            const track = wrapper.querySelector('.carousel-track');
-            const slides = track.querySelectorAll('.carousel-slide');
-            let current = 0;
-            let interval;
-            
-            function advance() {
-                current++;
-                if (current >= slides.length) {
-                    current = 0;
-                    track.scrollTo({ left: 0, behavior: 'smooth' });
-                } else {
-                    const slideWidth = slides[0].offsetWidth + 12;
-                    track.scrollTo({ left: current * slideWidth, behavior: 'smooth' });
-                }
-            }
-            
-            function start() { interval = setInterval(advance, ms); }
-            function stop() { clearInterval(interval); }
-            
-            start();
-            wrapper.addEventListener('mouseenter', stop);
-            wrapper.addEventListener('mouseleave', function() {
-                const scrollLeft = track.scrollLeft;
-                const slideWidth = slides[0].offsetWidth + 12;
-                current = Math.round(scrollLeft / slideWidth);
-                start();
-            });
-        }
-        
-        autoScrollCarousel('projects-carousel', 4000);
-        autoScrollCarousel('content-carousel', 5000);
-    </script>
+    <script src="js/spotlight.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/carousel.js"></script>
 </body>
 </html>
