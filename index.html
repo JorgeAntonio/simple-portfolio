@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="George's Coding - Senior Mobile Developer especializado en Flutter, NestJS y Arquitecturas Limpias. Building AI-First Mobile Experiences.">
+    <meta name="keywords" content="Flutter Developer, NestJS, Mobile Development, AI-First, Clean Architecture">
+    <meta name="author" content="George's Coding">
+    <meta property="og:title" content="George's Coding | AI-First Mobile Developer">
+    <meta property="og:description" content="Building AI-First Mobile Experiences with Flutter, NestJS and Clean Architecture">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <title>George's Coding | AI-First Mobile Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        bg: '#000000',
+                        fg: '#ffffff',
+                        muted: '#888888',
+                        accent: '#3291ff',
+                        border: '#333333',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        :root {
+            --bg: #000000;
+            --fg: #ffffff;
+            --muted: #888888;
+            --accent: #3291ff;
+            --border: #333333;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--fg);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+        
+        .heading-tight { letter-spacing: -0.045em; line-height: 1.05; }
+        .subheading { letter-spacing: -0.025em; line-height: 1.4; }
+        
+        .nav-glass {
+            background: rgba(10, 10, 10, 0.75);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.03) inset, 0 20px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .spotlight-card {
+            position: relative;
+            border: 1px solid var(--border);
+            background: transparent;
+            border-radius: 12px;
+            transition: border-color 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        .spotlight-card::before {
+            content: ''; position: absolute; inset: 0; border-radius: inherit;
+            opacity: 0; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            background: radial-gradient(500px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.04), transparent 40%);
+        }
+        .spotlight-card::after {
+            content: ''; position: absolute; inset: -1px; border-radius: inherit;
+            opacity: 0; transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15), transparent 40%);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude; -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; padding: 1px;
+        }
+        .spotlight-card:hover { border-color: rgba(255,255,255,0.12); }
+        .spotlight-card:hover::before, .spotlight-card:hover::after { opacity: 1; }
+        
+        .fade-in-up {
+            opacity: 0; transform: translateY(24px);
+            transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+        }
+        .fade-in-up.visible { opacity: 1; transform: translateY(0); }
+        
+        .stagger-1 { transition-delay: 0ms; }
+        .stagger-2 { transition-delay: 80ms; }
+        .stagger-3 { transition-delay: 160ms; }
+        .stagger-4 { transition-delay: 240ms; }
+        .stagger-5 { transition-delay: 320ms; }
+        .stagger-6 { transition-delay: 400ms; }
+        .stagger-7 { transition-delay: 480ms; }
+        
+        @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 0.8; } 50% { transform: scale(1.8); opacity: 0; } 100% { transform: scale(0.9); opacity: 0; } }
+        @keyframes pulse-core { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .pulse-ring { animation: pulse-ring 2.5s cubic-bezier(0.4,0,0.6,1) infinite; }
+        .pulse-core { animation: pulse-core 2.5s ease-in-out infinite; }
+        
+        .arrow-link { position: relative; transition: color 0.25s ease; }
+        .arrow-link .arrow-icon { transition: transform 0.25s cubic-bezier(0.4,0,0.2,1); }
+        .arrow-link:hover { color: var(--fg); }
+        .arrow-link:hover .arrow-icon { transform: translateX(4px); }
+        
+        .nav-link { position: relative; transition: color 0.2s ease; }
+        .nav-link::after { content: ''; position: absolute; bottom: -2px; left: 50%; width: 0; height: 1px; background: var(--fg); transition: width 0.3s ease, left 0.3s ease; }
+        .nav-link:hover::after { width: 100%; left: 0; }
+        
+        .tech-badge {
+            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .spotlight-card:hover .tech-badge { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+        
+        .section-label { letter-spacing: 0.15em; }
+        
+        .tech-icon { transition: all 0.3s ease; }
+        .tech-icon:hover { transform: scale(1.08); background: rgba(50,145,255,0.1); border-color: var(--accent); }
+        .tech-icon:hover svg { color: var(--accent); }
+        
+        .glass-card {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+        
+        .content-card { transition: all 0.4s cubic-bezier(0.16,1,0.3,1); }
+        .content-card:hover { transform: scale(1.03); z-index: 10; }
+        .content-card:hover .play-button { transform: scale(1); opacity: 1; }
+        .play-button { transform: scale(0.8); opacity: 0; transition: all 0.3s ease; }
+        
+        a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .fade-in-up { opacity: 1; transform: none; transition: none; }
+            .pulse-ring, .pulse-core { animation: none; }
+            .arrow-link .arrow-icon, .nav-link::after, .spotlight-card, .spotlight-card::before, .spotlight-card::after { transition: none; }
+            html { scroll-behavior: auto; }
+        }
+        
+        ::selection { background: rgba(50, 145, 255, 0.3); color: var(--fg); }
+        
+        /* Carousel */
+        .carousel-wrapper { position: relative; }
+        .carousel-track {
+            display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
+            scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth;
+            padding-bottom: 4px;
+        }
+        .carousel-track::-webkit-scrollbar { display: none; }
+        .carousel-slide { scroll-snap-align: start; flex: 0 0 auto; }
+        .carousel-btn {
+            position: absolute; top: 50%; transform: translateY(-50%); z-index: 10;
+            width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--border);
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(12px); color: var(--muted);
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+            transition: all 0.2s ease; opacity: 0;
+        }
+        .carousel-wrapper:hover .carousel-btn { opacity: 1; }
+        .carousel-btn:hover { border-color: var(--fg); color: var(--fg); }
+        .carousel-btn.prev { left: -16px; }
+        .carousel-btn.next { right: -16px; }
+        .carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 16px; }
+        .carousel-dot {
+            width: 6px; height: 6px; border-radius: 50%; background: var(--border);
+            border: none; cursor: pointer; transition: all 0.3s ease; padding: 0;
+        }
+        .carousel-dot.active { background: var(--fg); width: 18px; border-radius: 3px; }
+        
+        /* Tech marquee */
+        .marquee-wrapper { overflow: hidden; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+        .marquee-track { display: flex; gap: 8px; width: max-content; animation: marquee 20s linear infinite; }
+        .marquee-track:hover { animation-play-state: paused; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+    </style>
+</head>
+<body class="min-h-screen">
+    
+    <!-- Navigation -->
+    <nav class="fixed top-5 left-1/2 -translate-x-1/2 z-50 nav-glass rounded-full px-1.5 py-1.5 fade-in-up stagger-1" role="navigation" aria-label="Main navigation">
+        <div class="flex items-center justify-center gap-0.5">
+            <a href="#projects" class="nav-link px-4 py-2 text-sm font-medium text-white">Proyectos</a>
+            <a href="#content" class="nav-link px-4 py-2 text-sm font-medium text-muted hover:text-white">Contenido</a>
+            <a href="#contact" class="nav-link px-4 py-2 text-sm font-medium text-muted hover:text-white">Contacto</a>
+        </div>
+    </nav>
+    
+    <!-- Status Indicator -->
+    <div class="fixed bottom-5 right-5 md:bottom-8 md:right-8 z-50 fade-in-up stagger-2">
+        <div class="flex items-center gap-2.5 px-4 py-2.5 rounded-full border border-border/60 bg-black/60 backdrop-blur-md">
+            <span class="relative flex h-2 w-2 flex-shrink-0">
+                <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-emerald-400/50"></span>
+                <span class="pulse-core relative inline-flex rounded-full h-2 w-2 bg-emerald-400"></span>
+            </span>
+            <span class="text-sm text-muted font-medium whitespace-nowrap">
+                Disponible para proyectos
+            </span>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <main class="max-w-2xl mx-auto px-6 pt-28 pb-20 md:pt-36 md:pb-32">
+        
+        <!-- Hero Section -->
+        <section class="mb-28 md:mb-36 fade-in-up stagger-3">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border/50 mb-6">
+                <svg class="w-3.5 h-3.5 text-accent" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                <span class="text-xs text-muted font-medium">AI-First Mobile Developer</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold heading-tight text-white mb-5">
+                George's Coding
+            </h1>
+            <p class="text-lg sm:text-xl md:text-2xl text-muted font-medium subheading max-w-xl mb-8 leading-relaxed">
+                Especializado en <span class="text-white">Flutter</span>, <span class="text-white">NestJS</span> y <span class="text-white">Arquitecturas Limpias</span>. 
+                Transformando ideas en aplicaciones moviles inteligentes y escalables.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="#projects" class="inline-flex items-center gap-2 px-5 py-2.5 bg-accent text-black text-sm font-semibold rounded-lg hover:bg-opacity-90 transition-all">
+                    Ver Proyectos
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+                <a href="#contact" class="arrow-link inline-flex items-center gap-2 text-sm text-muted font-medium">
+                    Contactar
+                    <svg class="arrow-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+            </div>
+            
+            <!-- Tech Stack Marquee -->
+            <div class="mt-10 marquee-wrapper">
+                <div class="marquee-track">
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.386z"/></svg><span class="text-[9px] text-muted">Flutter</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M4.105 4.105S9.158 1.58 11.684.604c.238-.092.89-.317 1.526-.317.637 0 1.38.178 1.816.553.436.374 4.105 3.842 4.105 3.842l-6.947 6.948-4.105-4.105-3.974-3.42z"/></svg><span class="text-[9px] text-muted">Dart</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg><span class="text-[9px] text-muted">iOS</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.342a.855.855 0 01-.854-.855c0-.47.383-.854.854-.854.471 0 .855.383.855.854 0 .472-.384.855-.855.855m-11.046 0a.855.855 0 01-.855-.855c0-.47.384-.854.855-.854.47 0 .854.383.854.854 0 .472-.384.855-.854.855m11.405-6.018l1.997-3.46a.416.416 0 00-.152-.567.416.416 0 00-.568.152L17.15 8.928a12.265 12.265 0 00-5.15-1.107c-1.836 0-3.558.398-5.15 1.107L4.841 5.45a.416.416 0 00-.568-.152.416.416 0 00-.152.568l1.997 3.46C2.688 11.185.474 14.36.003 18h23.994c-.471-3.64-2.685-6.815-6.115-8.676"/></svg><span class="text-[9px] text-muted">Android</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M12 5l7 7-7 7"/></svg><span class="text-[9px] text-muted">NestJS</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg><span class="text-[9px] text-muted">PostgreSQL</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><span class="text-[9px] text-muted">Django</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg><span class="text-[9px] text-muted">Docker</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span class="text-[9px] text-muted">Gemini</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg><span class="text-[9px] text-muted">RAG</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg><span class="text-[9px] text-muted">LangChain</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg><span class="text-[9px] text-muted">Vector DB</span></div>
+                    <!-- Duplicate for seamless loop -->
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M14.314 0L2.3 12 6 15.7 21.684.013h-7.357zm.014 11.072L7.857 17.53l6.47 6.47H21.7l-6.46-6.468 6.46-6.46h-7.386z"/></svg><span class="text-[9px] text-muted">Flutter</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M4.105 4.105S9.158 1.58 11.684.604c.238-.092.89-.317 1.526-.317.637 0 1.38.178 1.816.553.436.374 4.105 3.842 4.105 3.842l-6.947 6.948-4.105-4.105-3.974-3.42z"/></svg><span class="text-[9px] text-muted">Dart</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="currentColor" viewBox="0 0 24 24"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg><span class="text-[9px] text-muted">iOS</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" viewBox="0 0 24 24" fill="currentColor"><path d="M17.523 15.342a.855.855 0 01-.854-.855c0-.47.383-.854.854-.854.471 0 .855.383.855.854 0 .472-.384.855-.855.855m-11.046 0a.855.855 0 01-.855-.855c0-.47.384-.854.855-.854.47 0 .854.383.854.854 0 .472-.384.855-.854.855m11.405-6.018l1.997-3.46a.416.416 0 00-.152-.567.416.416 0 00-.568.152L17.15 8.928a12.265 12.265 0 00-5.15-1.107c-1.836 0-3.558.398-5.15 1.107L4.841 5.45a.416.416 0 00-.568-.152.416.416 0 00-.152.568l1.997 3.46C2.688 11.185.474 14.36.003 18h23.994c-.471-3.64-2.685-6.815-6.115-8.676"/></svg><span class="text-[9px] text-muted">Android</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 12h14M12 5l7 7-7 7"/></svg><span class="text-[9px] text-muted">NestJS</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"/></svg><span class="text-[9px] text-muted">PostgreSQL</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg><span class="text-[9px] text-muted">Django</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/></svg><span class="text-[9px] text-muted">Docker</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span class="text-[9px] text-muted">Gemini</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg><span class="text-[9px] text-muted">RAG</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg><span class="text-[9px] text-muted">LangChain</span></div>
+                    <div class="tech-icon flex flex-col items-center gap-1 p-2.5 rounded-lg bg-white/[0.02] border border-border/50"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375"/></svg><span class="text-[9px] text-muted">Vector DB</span></div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Carousel -->
+        <section id="projects" class="mb-28 md:mb-36">
+            <div class="mb-6 fade-in-up stagger-4">
+                <h2 class="text-xs font-semibold text-muted uppercase section-label">Proyectos Destacados</h2>
+            </div>
+            
+            <div class="carousel-wrapper fade-in-up stagger-4" id="projects-carousel">
+                <button class="carousel-btn prev" onclick="carouselNav('projects-carousel', -1)" aria-label="Anterior">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button class="carousel-btn next" onclick="carouselNav('projects-carousel', 1)" aria-label="Siguiente">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <div class="carousel-track">
+                    <!-- TrivIA Project -->
+                    <div class="carousel-slide" style="width: calc(50% - 6px); min-width: 220px;">
+                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;" onmousemove="handleSpotlight(event, this)">
+                            <div class="flex flex-col gap-3 h-full">
+                                <div class="w-full h-1 rounded-full bg-gradient-to-r from-accent to-accent/40 -mt-6 -mx-6 mb-1" style="width: calc(100% + 48px);"></div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-base font-semibold text-white">TrivIA: Party Roast</h3>
+                                </div>
+                                <span class="text-[9px] text-muted font-medium px-1.5 py-0.5 rounded border border-border/50 self-start">Google Play</span>
+                                <p class="text-sm text-muted font-medium leading-relaxed flex-1">App de trivia con IA generativa que crea preguntas personalizadas y roast comedicos. Integracion con Gemini API para contenido dinamico.</p>
+                                <div class="flex items-center gap-3 text-xs text-muted">
+                                    <span><span class="font-semibold text-white">4.7</span> Rating</span>
+                                    <span><span class="font-semibold text-white">10K+</span> Downloads</span>
+                                </div>
+                                <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">Flutter</span>
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">Gemini</span>
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">Firebase</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- UNAP Chatbot -->
+                    <div class="carousel-slide" style="width: calc(50% - 6px); min-width: 220px;">
+                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;" onmousemove="handleSpotlight(event, this)">
+                            <div class="flex flex-col gap-3 h-full">
+                                <div class="w-full h-1 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-400/40 -mt-6 -mx-6 mb-1" style="width: calc(100% + 48px);"></div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-base font-semibold text-white">UNAP Chatbot RAG</h3>
+                                </div>
+                                <span class="text-[9px] text-muted font-medium px-1.5 py-0.5 rounded border border-border/50 self-start">Institucional</span>
+                                <p class="text-sm text-muted font-medium leading-relaxed flex-1">Sistema de chatbot institucional con RAG para consultas academicas. Integracion con documentos PDF y base de datos vectorial.</p>
+                                <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">NestJS</span>
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">Gemini</span>
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">RAG</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                    <!-- Flutter Scaffolder CLI -->
+                    <div class="carousel-slide" style="width: calc(50% - 6px); min-width: 220px;">
+                        <article class="spotlight-card p-6 h-full" style="min-height: 280px;" onmousemove="handleSpotlight(event, this)">
+                            <div class="flex flex-col gap-3 h-full">
+                                <div class="w-full h-1 rounded-full bg-gradient-to-r from-purple-400 to-purple-400/40 -mt-6 -mx-6 mb-1" style="width: calc(100% + 48px);"></div>
+                                <div class="flex items-center gap-2">
+                                    <h3 class="text-base font-semibold text-white">Flutter Scaffolder CLI</h3>
+                                </div>
+                                <span class="text-[9px] text-muted font-medium px-1.5 py-0.5 rounded border border-border/50 self-start">Open Source</span>
+                                <p class="text-sm text-muted font-medium leading-relaxed flex-1">Herramienta CLI para generar estructura de proyectos Flutter con Clean Architecture. Automatiza horas de configuracion inicial.</p>
+                                <div class="flex items-center gap-1.5 flex-wrap pt-1">
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">Dart</span>
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">CLI</span>
+                                    <span class="tech-badge text-[10px] text-muted font-medium px-2 py-0.5 rounded">500+ Stars</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="projects-carousel-dots"></div>
+            </div>
+        </section>
+
+
+        
+        <!-- Content Feed Carousel -->
+        <section id="content" class="mb-28 md:mb-36 fade-in-up">
+            <div class="mb-6">
+                <h2 class="text-xs font-semibold text-muted uppercase section-label">Contenido</h2>
+                <p class="text-sm text-muted mt-2">Tutoriales, tips y experiencias sobre desarrollo movil.</p>
+            </div>
+            
+            <div class="carousel-wrapper" id="content-carousel">
+                <button class="carousel-btn prev" onclick="carouselNav('content-carousel', -1)" aria-label="Anterior">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <button class="carousel-btn next" onclick="carouselNav('content-carousel', 1)" aria-label="Siguiente">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+                <div class="carousel-track">
+                    <div class="carousel-slide" style="width: 55%; min-width: 200px;">
+                        <div class="content-card spotlight-card overflow-hidden cursor-pointer group" onmousemove="handleSpotlight(event, this)">
+                            <div class="aspect-[9/16] bg-gradient-to-br from-accent/20 to-transparent relative">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="play-button w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+                                    <span class="text-[11px] text-white font-medium">Clean Architecture en Flutter - Guia Completa</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" style="width: 55%; min-width: 200px;">
+                        <div class="content-card spotlight-card overflow-hidden cursor-pointer group" onmousemove="handleSpotlight(event, this)">
+                            <div class="aspect-[9/16] bg-gradient-to-br from-emerald-500/20 to-transparent relative">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="play-button w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+                                    <span class="text-[11px] text-white font-medium">NestJS + Flutter: API REST desde Cero</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" style="width: 55%; min-width: 200px;">
+                        <div class="content-card spotlight-card overflow-hidden cursor-pointer group" onmousemove="handleSpotlight(event, this)">
+                            <div class="aspect-[9/16] bg-gradient-to-br from-purple-500/20 to-transparent relative">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="play-button w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+                                    <span class="text-[11px] text-white font-medium">Integrando Gemini API en tu App Flutter</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" style="width: 55%; min-width: 200px;">
+                        <div class="content-card spotlight-card overflow-hidden cursor-pointer group" onmousemove="handleSpotlight(event, this)">
+                            <div class="aspect-[9/16] bg-gradient-to-br from-orange-500/20 to-transparent relative">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="play-button w-12 h-12 rounded-full bg-accent flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-black ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </div>
+                                </div>
+                                <div class="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black to-transparent">
+                                    <span class="text-[11px] text-white font-medium">State Management: Bloc vs Riverpod</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="content-carousel-dots"></div>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <a href="#" class="arrow-link inline-flex items-center gap-2 text-sm text-muted font-medium">
+                    Ver todos los videos
+                    <svg class="arrow-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </a>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="fade-in-up">
+            <div class="mb-6">
+                <h2 class="text-xs font-semibold text-muted uppercase section-label">Contacto</h2>
+            </div>
+            
+            <div class="space-y-4">
+                <p class="text-lg sm:text-xl text-muted font-medium subheading leading-relaxed">
+                    Trabajemos Juntos
+                </p>
+                <p class="text-base text-muted font-medium leading-relaxed">
+                    Estoy disponible para proyectos freelance, consultoria tecnica o colaboraciones. Construyamos algo extraordinario.
+                </p>
+                <div class="flex flex-wrap gap-x-6 gap-y-3">
+                    <a href="mailto:contact@georgescoding.dev" class="arrow-link inline-flex items-center gap-2 text-sm text-muted font-medium">
+                        Email
+                        <svg class="arrow-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="arrow-link inline-flex items-center gap-2 text-sm text-muted font-medium">
+                        GitHub
+                        <svg class="arrow-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="arrow-link inline-flex items-center gap-2 text-sm text-muted font-medium">
+                        LinkedIn
+                        <svg class="arrow-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" class="arrow-link inline-flex items-center gap-2 text-sm text-muted font-medium">
+                        Twitter
+                        <svg class="arrow-icon w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+    </main>
+    
+    <!-- Footer -->
+    <footer class="border-t border-border/25 py-6">
+        <div class="max-w-2xl mx-auto px-6 flex items-center justify-between">
+            <p class="text-xs text-muted/70 font-medium tracking-wide">2024 George's Coding. Construido con Flutter y determinacion.</p>
+            <p class="text-xs text-muted/70 font-medium">Hecho con precision en Peru</p>
+        </div>
+    </footer>
+    
+    <script>
+        function handleSpotlight(e, card) {
+            const rect = card.getBoundingClientRect();
+            card.style.setProperty('--mouse-x', (e.clientX - rect.left) + 'px');
+            card.style.setProperty('--mouse-y', (e.clientY - rect.top) + 'px');
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { root: null, rootMargin: '0px 0px -50px 0px', threshold: 0.15 });
+            
+            document.querySelectorAll('.fade-in-up').forEach(function(el) {
+                observer.observe(el);
+            });
+        });
+        
+        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                if (href && href !== '#') {
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        document.querySelectorAll('.tech-icon').forEach(function(icon) {
+            icon.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => { this.style.transform = ''; }, 150);
+            });
+        });
+        
+        document.addEventListener('keydown', function(e) { if (e.key === 'Tab') document.body.classList.add('keyboard-nav'); });
+        document.addEventListener('mousedown', function() { document.body.classList.remove('keyboard-nav'); });
+        
+        // Carousel logic
+        function initCarousel(id) {
+            const wrapper = document.getElementById(id);
+            if (!wrapper) return;
+            const track = wrapper.querySelector('.carousel-track');
+            const slides = track.querySelectorAll('.carousel-slide');
+            const dotsContainer = document.getElementById(id + '-dots');
+            
+            slides.forEach(function(_, i) {
+                const dot = document.createElement('button');
+                dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+                dot.setAttribute('aria-label', 'Ir a slide ' + (i + 1));
+                dot.addEventListener('click', function() {
+                    slides[i].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+                });
+                dotsContainer.appendChild(dot);
+            });
+            
+            track.addEventListener('scroll', function() {
+                const scrollLeft = track.scrollLeft;
+                const slideWidth = slides[0].offsetWidth + 12;
+                const active = Math.round(scrollLeft / slideWidth);
+                dotsContainer.querySelectorAll('.carousel-dot').forEach(function(dot, i) {
+                    dot.classList.toggle('active', i === active);
+                });
+            });
+        }
+        
+        function carouselNav(id, dir) {
+            const wrapper = document.getElementById(id);
+            const track = wrapper.querySelector('.carousel-track');
+            const slideWidth = track.querySelector('.carousel-slide').offsetWidth + 12;
+            track.scrollBy({ left: dir * slideWidth, behavior: 'smooth' });
+        }
+        
+        initCarousel('projects-carousel');
+        initCarousel('content-carousel');
+        
+        // Auto-scroll for carousels
+        function autoScrollCarousel(id, ms) {
+            const wrapper = document.getElementById(id);
+            if (!wrapper) return;
+            const track = wrapper.querySelector('.carousel-track');
+            const slides = track.querySelectorAll('.carousel-slide');
+            let current = 0;
+            let interval;
+            
+            function advance() {
+                current++;
+                if (current >= slides.length) {
+                    current = 0;
+                    track.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    const slideWidth = slides[0].offsetWidth + 12;
+                    track.scrollTo({ left: current * slideWidth, behavior: 'smooth' });
+                }
+            }
+            
+            function start() { interval = setInterval(advance, ms); }
+            function stop() { clearInterval(interval); }
+            
+            start();
+            wrapper.addEventListener('mouseenter', stop);
+            wrapper.addEventListener('mouseleave', function() {
+                const scrollLeft = track.scrollLeft;
+                const slideWidth = slides[0].offsetWidth + 12;
+                current = Math.round(scrollLeft / slideWidth);
+                start();
+            });
+        }
+        
+        autoScrollCarousel('projects-carousel', 4000);
+        autoScrollCarousel('content-carousel', 5000);
+    </script>
+</body>
+</html>
