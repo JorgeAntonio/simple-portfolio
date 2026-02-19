@@ -1,6 +1,6 @@
-# George's Coding — Portfolio
+# George — Portfolio
 
-Portafolio personal de **George's Coding**, Senior Mobile Developer especializado en Flutter, NestJS y Arquitecturas Limpias.
+Portafolio personal de **George**, Mobile Developer especializado en Flutter, NestJS y Arquitecturas Limpias.
 
 ## 🛠 Stack
 
